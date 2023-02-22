@@ -77,6 +77,10 @@ const FormRoutes = [
     path: '/forms/add-partners',
     component: lazy(() => import('../../views/forms/form-repeater/add-partners'))
   },
+  {
+    path: '/forms/view-products',
+    component: lazy(() => import('../../views/tables/data-tables/basic/proudctTable'))
+  },
   //  {
   //   path: '/forms/product-management',
   //   component: lazy(() => import('../../views/forms/form-repeater/product-management'))

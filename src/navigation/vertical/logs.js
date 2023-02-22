@@ -4,13 +4,13 @@ import { FileText, RotateCw,Smile } from "react-feather";
 export default [
   {
     id: "profileSection",
-    title: "Profile",
+    title: "Logs",
     icon: <Smile size={20} />,
     children: [ {
         id: 'ReportRepeater',
-        title: 'View Profile',
+        title: 'Access Logs',
         icon: <Smile size={20} />,
-        navLink: '/profile/view-profile'
+        navLink: '/logs/accesslogs'
       },],
   },
 ];

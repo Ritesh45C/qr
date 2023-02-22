@@ -1,5 +1,5 @@
 // ** Icons Import
-import { Copy, Settings, RotateCw, LogOut } from 'react-feather'
+import { Copy, Settings, RotateCw, LogOut, Smile } from 'react-feather'
 
 export default [
 
@@ -13,6 +13,12 @@ export default [
         title: 'Logout',
         icon: <LogOut size={20} />,
         navLink: '../'
+      },
+      {
+        id: 'ReportRepeater',
+        title: 'Access Logs',
+        icon: <Smile size={20} />,
+        navLink: '/logs/accesslogs'
       },
     //   {
     //     id: 'formRepeater',

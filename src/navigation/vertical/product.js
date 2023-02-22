@@ -1,5 +1,6 @@
 // ** Icons Import
 import { Copy, ShoppingBag, RotateCw, AlertTriangle } from 'react-feather'
+var role =localStorage.getItem("role")
 
 export default [
 
@@ -7,7 +8,13 @@ export default [
     id: 'productElements',
     title: 'Product',
     icon: <ShoppingBag size={20} />,
-    children: [
+    children:  role==="admin"||role==="superadmin"? [
+      {
+        id: 'productRepeater',
+        title: 'View Products',
+        icon: <RotateCw size={20} />,
+        navLink: '/forms/view-products'
+      },
       {
         id: 'productRepeater',
         title: 'Add Category',
@@ -20,25 +27,30 @@ export default [
         icon: <RotateCw size={20} />,
         navLink: '/forms/add-subcategory'
       },
-      {
-        id: 'productRepeater',
-        title: 'Add Partners',
-        icon: <RotateCw size={20} />,
-        navLink: '/forms/product-part-category'
-      },
-      {
-        id: 'productRepeater',
-        title: 'Product Management',
-        icon: <RotateCw size={20} />,
-        navLink: '/forms/product-mngement'
-      },
-      {
-        id: 'productRepeater',
-        title: 'Product Detail Page',
-        icon: <RotateCw size={20} />,
-        navLink: '/apps/user/view'
-      }
-    ]
+      // {
+      //   id: 'productRepeater',
+      //   title: 'Add Partners',
+      //   icon: <RotateCw size={20} />,
+      //   navLink: '/forms/product-part-category'
+      // },
+      // {
+      //   id: 'productRepeater',
+      //   title: 'Product Management',
+      //   icon: <RotateCw size={20} />,
+      //   navLink: '/forms/product-mngement'
+      // },
+      // {
+      //   id: 'productRepeater',
+      //   title: 'Product Detail Page',
+      //   icon: <RotateCw size={20} />,
+      //   navLink: '/apps/user/view'
+      // }
+    ]: [{
+      id: 'productRepeater',
+      title: 'View Products',
+      icon: <RotateCw size={20} />,
+      navLink: '/forms/view-products'
+    }],
   },
   // {
   //   id: 'formLayouts',

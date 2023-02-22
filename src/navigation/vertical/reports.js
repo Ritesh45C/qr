@@ -1,5 +1,5 @@
 // ** Icons Import
-import { FileText, RotateCw } from "react-feather";
+import { FileText, RotateCw,Clipboard } from "react-feather";
 
 export default [
   {
@@ -9,8 +9,9 @@ export default [
     children: [ {
         id: 'ReportRepeater',
         title: 'View Reports',
-        icon: <RotateCw size={20} />,
-        navLink: '/reports/create-reports'
+        icon: <Clipboard size={20} />,
+        navLink: '/reports/view-reports'
       },],
   },
+ 
 ];

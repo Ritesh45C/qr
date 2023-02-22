@@ -12,7 +12,8 @@ import PageLayoutsRoutes from './PageLayouts'
 import Jobs from './Jobs'
 import Reports from './Reports'
 import Profile from'./Profile'
-
+import Partner from './Partner'
+import Logs from './accessLogs'
 // ** Document title
 // const TemplateTitle = 'Panasonic Warranty App'
 
@@ -29,8 +30,10 @@ const Routes = [
   ...PageLayoutsRoutes,
   ...FormRoutes,
   ...Jobs,
+  ...Logs,
   ...Reports,
   ...Profile,
+  ...Partner,
   ...TablesRoutes,
   ...ChartsRoutes
 ]

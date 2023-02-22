@@ -1,13 +1,15 @@
 import { lazy } from 'react'
 
-const FormRoutes = [
+const LogsRoutes = [
   
-
-
   {
-    path: '/reports/view-reports',
-    component: lazy(() => import('../../views/tables/data-tables/basic/reportsTable'))
+    path: '/logs/accesslogs',
+    component: lazy(() => import('../../views/accessLogs/accesslogs'))
   },
+//   {
+//     path: '/jobs/view-jobs',
+//     component: lazy(() => import('../../views/jobs/viewJobs'))
+//   },
 //   {
 //     path: '/forms/add-subcategory',
 //     component: lazy(() => import('../../views/forms/form-repeater/add-subcategory'))
@@ -23,4 +25,4 @@ const FormRoutes = [
 
 ]
 
-export default FormRoutes
+export default LogsRoutes

@@ -208,7 +208,7 @@ console.log(configs)
                 <Label className='form-label' for='emailInput'>
                   E-mail
                 </Label>
-                <Input id='emailInput' type='email' name='email' placeholder='Email' defaultValue={defaultValues.email}/>
+                <Input disabled id='emailInput' type='email' name='email' placeholder='Email' defaultValue={defaultValues.email}/>
               </Col>
               <Col sm='6' className='mb-1'>
                 <Label className='form-label' for='designation'>
@@ -224,7 +224,7 @@ console.log(configs)
                 <Label className='form-label' for='company'>
                   Company
                 </Label>
-                <Input defaultValue={defaultValues.company} id='company' name='company' placeholder='Company Name' />
+                <Input disabled defaultValue={defaultValues.company} id='company' name='company' placeholder='Company Name' />
               </Col>
               <Col sm='6' className='mb-1'>
                 <Label className='form-label' for='phNumber'>
@@ -241,12 +241,7 @@ console.log(configs)
                 </Label>
                 <Input id='address' name='address' placeholder='12, Business Park' />
               </Col>
-              <Col sm='6' className='mb-1'>
-                <Label className='form-label' for='accountState'>
-                  Region
-                </Label>
-                <Input  defaultValue={defaultValues.region}  id='accountState' name='state' placeholder='California' />
-              </Col>
+             
               <Col sm='6' className='mb-1'>
                 <Label className='form-label' for='zipCode'>
                   Zip Code
@@ -262,12 +257,7 @@ console.log(configs)
 
             
               </Col>
-              <Col sm='6' className='mb-1'>
-                <Label className='form-label' for='userRole'>
-                User Role
-                </Label>
-                <Input id='userRole'defaultValue={defaultValues.userRole}  name='userRole' placeholder='123456' maxLength='6' />
-              </Col>
+             
              
               <Col className='mt-2' sm='12'>
                 <Button type='submit' className='me-1' color='primary'>

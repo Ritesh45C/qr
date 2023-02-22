@@ -8,7 +8,7 @@ import { List } from 'react-feather'
 import Avatar from '@components/avatar'
 import Timeline from '@components/timeline'
 import AvatarGroup from '@components/avatar-group'
-
+import DashboardStats from './stats'
 // ** Utils
 import { kFormatter } from '@utils'
 
@@ -34,6 +34,10 @@ import ceo from '@src/assets/images/portrait/small/avatar-s-9.jpg'
 
 // ** Styles
 import '@styles/react/libs/charts/apex-charts.scss'
+import StatsCard from './stats'
+import ProductTable from '../../tables/data-tables/basic/proudctTable'
+import SellersTable from '../../tables/data-tables/basic/sellersTable'
+import Graphs from './Graphs'
 
 const AnalyticsDashboard = () => {
   // ** Context
@@ -136,15 +140,27 @@ const AnalyticsDashboard = () => {
           <OrdersReceived kFormatter={kFormatter} warning={colors.warning.main} />
         </Col>
       </Row> */}
+
       <Row className='match-height'>
-        <Col lg='6' xs='12'>
+        <DashboardStats cols={{ xl: '3', sm: '6' }}/>
+        {/* <Col lg='6' xs='12'>
           <AvgSessions primary={colors.primary.main} />
         </Col>
         <Col lg='6' xs='12'>
           <SupportTracker primary={colors.primary.main} danger={colors.danger.main} />
-        </Col>
+        </Col> */}
       </Row>
-      <Row className='match-height'>
+      <Card>
+        <CardTitle style={{padding:"25px"}}>Analytics</CardTitle>
+      <Row>
+      <CardBody>
+          <Graphs/>
+      </CardBody>
+      
+      </Row>  
+      </Card>
+      
+      {/* <Row className='match-height'>
         <Col lg='4' xs='12'>
           <Card className='card-user-timeline'>
             <CardHeader>
@@ -164,10 +180,10 @@ const AnalyticsDashboard = () => {
         <Col lg='4' md='6' xs='12'>
           <CardAppDesign />
         </Col>
-      </Row>
+      </Row> */}
       <Row className='match-height'>
         <Col xs='12'>
-          <InvoiceList />
+          <SellersTable />
         </Col>
       </Row>
     </div>

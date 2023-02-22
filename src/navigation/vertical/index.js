@@ -4,6 +4,6 @@ import product from "./product";
 import reports from "./reports";
 import job from "./job";
 import profile from './profile'
-
+import partner from './partner'
 // ** Merge & Export
-export default [...dashboards, ...job, ...reports, ...product,...profile, ...forms];
+export default [...dashboards, ...job, ...reports, ...product,...profile,...partner, ...forms];

@@ -1,12 +1,12 @@
 // ** React Imports
 import { useState,useEffect } from 'react'
-import { Button, Modal, ModalHeader, ModalBody, ModalFooter } from 'reactstrap'
-import { Row, Col, Card, CardHeader, CardBody, Form, Label, Input ,FormGroup} from 'reactstrap'
-import Select from 'react-select'
-import { selectThemeColors } from '@utils'
+
 // ** Table columns & Expandable Data
 import ExpandableTable, { data, columns } from '../data'
-
+import Select from 'react-select'
+import { Button, Modal, ModalHeader, ModalBody, ModalFooter } from 'reactstrap'
+import { Row, Col, CardHeader, CardBody, Form, Label, Input ,FormGroup} from 'reactstrap'
+import { selectThemeColors } from '@utils'
 // ** Third Party Components
 import ReactPaginate from 'react-paginate'
 import { ChevronDown } from 'react-feather'
@@ -15,22 +15,22 @@ import { Table, Badge, UncontrolledDropdown, DropdownMenu, DropdownItem, Dropdow
 import { MoreVertical, Edit, Trash } from 'react-feather'
 
 // ** Reactstrap Imports
-import {   CardTitle } from 'reactstrap'
+import { Card, CardTitle} from 'reactstrap'
 import axios, { Axios } from 'axios'
 
-const CateogryTable = () => {
+const SubcategoryTable = () => {
   // ** State
+  const [data,setData]=useState([])
   const [currentPage, setCurrentPage] = useState(0)
   const [centeredModal, setCenteredModal] = useState(false)
   const [bu,setBu]=useState('')
   const [category,setCategory]=useState("")
-  const [data,setData]=useState([])
+  const [subCategory,setSubCategory]=useState("")
   const [id,setId]=useState('')
+  const [options,setOptions]=useState([])
   const [successOpen,setSuccess]=useState(false)
   const [deleted,setDeleted]=useState(false)
   const [updated,setUpdated]=useState(false)
-
-
   // ** Function to handle filter
   const handlePagination = page => {
     setCurrentPage(page.selected)
@@ -38,17 +38,6 @@ const CateogryTable = () => {
   useEffect(() => {
    getCategories()
   }, [])
-  
-
-  const getCategories=async()=>{
-    const configs = {
-      headers: { Authorization: `Bearer ${localStorage.getItem('tokens')}` },
-  }
-    axios.get('https://warranty.lsin.panasonic.com/api/category',configs).then(res=>{
-        console.log(res.data)
-        setData(res.data)
-    })
-  }
   const colourOptions = [
     { value: 'LIGHTING', label: 'LIGHTING' },
     // { value: 'blue', label: 'Blue' },
@@ -56,49 +45,40 @@ const CateogryTable = () => {
     // { value: 'red', label: 'Red' },
     // { value: 'LIGHTING', label: 'LIGHTING' }
   ]
-  const handleSubmit=(event)=>{
-    event.preventDefault();
 
-    var data={
-    category,BU:bu.value,company:"Panasonic"
-    }
+  const getCategories=async()=>{
     const configs = {
       headers: { Authorization: `Bearer ${localStorage.getItem('tokens')}` },
   }
-    axios.put(`https://Warranty.lsin.panasonic.com/api/category/${id}`,data,configs).then(res=>{
-      setSuccess(true)
-
-      getCategories()
-
-    setCenteredModal(false)
- 
-    setSuccess(true)
-    })
+    axios.get('https://warranty.lsin.panasonic.com/api/category',configs).then(res=>{
+        console.log(res.data)
+        var data = res.data.map((a) => {
+            return({
+                value: a.category,
+            label: a.category
+            })
+          
+          });
+          setOptions(data);    })
   }
-  const handleDelete=(row)=>{
-
-  
+  const fetchSubcategory= async(key)=>{
+    const baseUrls=    "https://Warranty.lsin.panasonic.com/api/category/subCategory/";
+    // const baseUrl = "https://Warranty.lsin.panasonic.com/api/generator/?search=";
     const configs = {
       headers: { Authorization: `Bearer ${localStorage.getItem('tokens')}` },
   }
-    axios.delete(`https://Warranty.lsin.panasonic.com/api/category/${row._id}`,configs).then(res=>{
-      getCategories()
+    axios.get(`${baseUrls}${key}`,configs).then(res=>{
+       setData(res.data)
+    //   var colourOptions=res.data.msg.map(a=>{
+    //    return({
+    //     //  value:a.itemCode,
+    //      label:a.itemCode,
+    //      description:a.description
+    //    })
+    //   })
+    //   setitemCode(colourOptions)
+  })}
 
-    setCenteredModal(false)
- 
-  setDeleted(true)
-    })
-  }
-  const groupByKey = (list, key) =>
-  list.reduce(
-    (hash, obj) => ({
-      ...hash,
-      [obj[key]]: (hash[obj[key]] || []).concat(obj),
-    }),
-    {}
-  );
-
-  
   // ** Custom Pagination
   const CustomPagination = () => (
     <ReactPaginate
@@ -122,36 +102,34 @@ const CateogryTable = () => {
       containerClassName={'pagination react-paginate separated-pagination pagination-sm justify-content-end pe-1'}
     />
   )
-  const openeditModal=(row)=>{
-    setCenteredModal(true)
 
-    setBu({value:row.businessunit,label:row.businessunit})
-    setCategory(row.category)
-    setId(row._id)
-    
-  }
  var columns= [{
-    name: 'Categories',
+  name: 'Category',
+  sortable: true,
+  minWidth: '250px',
+  selector: row => row.category
+},
+{
+  name: 'Bussiness Unit',
+  sortable: true,
+  minWidth: '250px',
+  selector: row => row.BU
+},{
+    name: 'Sub Categories',
     sortable: true,
     minWidth: '250px',
-    selector: row => row.category
-  },
-  {
-    name: 'Bussiness Unit',
-    sortable: true,
-    minWidth: '250px',
-    selector: row => row.businessunit
+    selector: row => row.subCategory
   },
   {
     name: 'Actions',
     sortable: true,
     minWidth: '250px',
     cell:row=> 
-      <UncontrolledDropdown>
+      <UncontrolledDropdown >
       <DropdownToggle className='icon-btn hide-arrow' color='transparent' size='sm' caret>
         <MoreVertical size={15} />
       </DropdownToggle>
-      <DropdownMenu>
+      <DropdownMenu className='ritesh'>
         <DropdownItem  onClick={e =>openeditModal(row) }>
           <Edit className='me-50' size={15} /> <span className='align-middle'>Edit</span>
         </DropdownItem>
@@ -162,12 +140,53 @@ const CateogryTable = () => {
     </UncontrolledDropdown>
     
 
-  },
-]
+  },]
+  const openeditModal=(row)=>{
+    setCenteredModal(true)
 
+    setBu({value:row.BU,label:row.BU})
+    setCategory({value:row.category,label:row.category})
+    setSubCategory(row.subCategory)
+    setId(row._id)
+    
+  }
+  const handleSubmit=(event)=>{
+    event.preventDefault();
+
+    var data={
+    category:category.value,BU:bu.value,company:"Panasonic",subCategory:subCategory
+    }
+    const configs = {
+      headers: { Authorization: `Bearer ${localStorage.getItem('tokens')}` },
+  }
+    axios.put(`https://Warranty.lsin.panasonic.com/api/category/subCategory/${id}`,data,configs).then(res=>{
+      getCategories()
+      setSuccess(true)
+
+    setCenteredModal(false)
+ 
+      console.log(res.data)
+    })
+  }
+  const handleDelete=(row)=>{
+
+  
+    const configs = {
+      headers: { Authorization: `Bearer ${localStorage.getItem('tokens')}` },
+  }
+    axios.delete(`https://Warranty.lsin.panasonic.com/api/category/subCategory/${row._id}`,configs).then(res=>{
+      getCategories()
+
+    setCenteredModal(false)
+ 
+    setDeleted(true)
+
+    })
+  }
+  
   return (
     <Card>
-      <Modal isOpen={successOpen} toggle={() => setSuccess(!successOpen)} className='modal-dialog-centered'>
+        <Modal isOpen={successOpen} toggle={() => setSuccess(!successOpen)} className='modal-dialog-centered'>
           <ModalHeader >Cateogry Successfully Updated!</ModalHeader>
         
           <ModalFooter>
@@ -195,11 +214,10 @@ const CateogryTable = () => {
           </ModalFooter>
         </Modal>
        <Modal isOpen={centeredModal} toggle={() => setCenteredModal(!centeredModal)} className='modal-dialog-centered'>
-          <ModalHeader toggle={() => setCenteredModal(!centeredModal)}>Edit Category</ModalHeader>
+          <ModalHeader toggle={() => setCenteredModal(!centeredModal)}>Edit Subcategory</ModalHeader>
           <ModalBody>
           <Form onSubmit={handleSubmit}>
         <FormGroup>
-        
 
 <Label className='form-label'>Select Bussiness Unit</Label>
       <Select
@@ -210,14 +228,28 @@ const CateogryTable = () => {
         value={bu}
         name='clear'
         options={colourOptions}
-        onChange={e=>setBu(e.value)}
+        onChange={e=>setBu(e)}
         isClearable
       />
 
 </FormGroup>
       <FormGroup>
-        <Label for="partnerCategory">Create Category:</Label>
-        <Input type="text" name="partnerCategory" id="partnerCategory" value={category} onChange={(e)=>setCategory(e.target.value)} />
+      <Label className='form-label'>Select Category</Label>
+            <Select
+              theme={selectThemeColors}
+              className='react-select'
+              classNamePrefix='select'
+              defaultValue={options[1]}
+              name='clear'
+              value={category}
+              options={options}
+              onChange={e=>setCategory(e)}
+              isClearable
+            />
+      </FormGroup>
+      <FormGroup>
+        <Label for="subCategory"> Sub Category:</Label>
+        <Input type="text" name="subCategory" id="subCategory" value={subCategory} onChange={(e)=>setSubCategory(e.target.value)} />
       </FormGroup>
       
 
@@ -227,8 +259,19 @@ const CateogryTable = () => {
          
         </Modal>
       <CardHeader>
-        <CardTitle tag='h4'>Categories Table</CardTitle>
-      </CardHeader>
+      <Col className='mb-1' md='3' sm='3'>
+            <Label className='form-label'>Select Category</Label>
+            <Select
+              theme={selectThemeColors}
+              className='react-select'
+              classNamePrefix='select'
+              defaultValue={options[1]}
+              name='clear'
+              options={options}
+              onChange={e=>fetchSubcategory(e.value)}
+              isClearable
+            />
+          </Col>      </CardHeader>
       <div className='react-dataTable'>
         {data.length?
         <DataTable
@@ -250,4 +293,4 @@ const CateogryTable = () => {
   )
 }
 
-export default CateogryTable
+export default SubcategoryTable

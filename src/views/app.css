@@ -7,12 +7,33 @@
 body {
   /* background: aliceblue !important; */
 }
+.customColumns{
+  display: flex;
+    width: 895px;
+    justify-content: space-between;
+    margin-bottom: 12px;
+}
 
+.description{
+  display: flex;
+}
+.units{
+  display: flex;
+  width: 150px;
+}
+
+.jobsTable{
+  margin-left: 34px;
+  margin-top: 40px;
+}
 .top-banner {
   display: flex;
   justify-content: space-around;
   height: 358px;
   align-items: center;
+}
+.selection-cell{
+  width:20px !important
 }
 
 .product-img {
@@ -103,7 +124,25 @@ body {
   height: 5px;
   background: #6b7afe;
 }
-
+.csvdownload{
+  color: teal;
+  font-size: 15px;
+  display: flex;
+    width: 100%;
+    justify-content: space-around;
+    margin: 10px;
+}
+.csvdownload a{
+  color: teal;
+  font-size: 15px;
+  display: flex;
+    width: 100%;
+    justify-content: space-around;
+}
+.jobid{
+  color: #6b7afe;
+  cursor: pointer;
+}
 .theme-tab .tab-title li.react-tabs__tab--selected {
   background-color: #fff;
   border-bottom: 2px solid #4466f2 !important;
@@ -115,7 +154,13 @@ body {
   border: none !important;
   border-bottom: 2px solid transparent;
 }
-
+.nodatapagination{
+  height: 500px;
+  padding: 48px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
 .claims-tab {
   margin-top: 70px;
 }
@@ -1279,4 +1324,12 @@ input[type="radio"]+label {
   .container {
     max-width: none;
   }
+}
+
+.statistics-body .row{
+ row-gap: 30px;
+}
+
+.ritesh{
+  transform: translate(0px, -50px) !important;
 }

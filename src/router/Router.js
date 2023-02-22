@@ -11,7 +11,7 @@ import LoginBasic from '../views/pages/authentication/LoginBasic'
 import LayoutWrapper from '@layouts/components/layout-wrapper'
 
 // ** Router Components
-import { BrowserRouter as AppRouter, Route, Switch, Redirect, useParams, withRouter } from 'react-router-dom'
+import { BrowserRouter as AppRouter, Route, Switch, Redirect, useParams, withRouter, useHistory } from 'react-router-dom'
 
 // ** Routes & Default Routes
 import { DefaultRoute, Routes } from './routes'
@@ -30,10 +30,19 @@ const Router = (props) => {
   // ** Hooks
   const { layout, setLayout, setLastLayout } = useLayout()
   const { transition, setTransition } = useRouterTransition()
+  const history= useHistory()
   // setLayout("horizontal")
   // ** ACL Ability Context
   const ability = useContext(AbilityContext)
   const url = "https://prod-api.xpcover.com"
+useEffect(() => {
+  var token = localStorage.getItem("tokens")
+  if(!token){
+    history.push("/login")
+  }
+
+ 
+}, [])
 
 
 

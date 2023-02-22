@@ -50,6 +50,7 @@ import {
 import "@styles/react/pages/page-authentication.scss";
 import logo from "@src/assets/images/logo/logo_Main.png";
 import axios from "axios";
+import { useEffect } from "react";
 
 const ToastContent = ({ name, role }) => (
   <Fragment>
@@ -61,7 +62,7 @@ const ToastContent = ({ name, role }) => (
     </div>
     <div className="toastify-body">
       <span>
-        You have successfully logged in as an {role} user to Vuexy. Now you can
+        You have successfully logged in as an {role} user to Dashboard. Now you can
         start to explore. Enjoy!
       </span>
     </div>
@@ -74,6 +75,10 @@ const defaultValues = {
 };
 
 const Login = () => {
+  useEffect(() => {
+   localStorage.removeItem('tokens')
+  }, [])
+  
   // ** Hooks
   const { skin } = useSkin();
   const dispatch = useDispatch();
@@ -103,6 +108,9 @@ const Login = () => {
         const name= res.data.msg.email
         const role=res.data.msg.userRole
         var tok=res.data.msg.token
+        console.log(res.data.msg)
+        localStorage.setItem("role", role)
+
         var tokens=JSON.stringify(res.data.msg.token).slice(1, -1) 
         
       useJwt
@@ -116,6 +124,7 @@ const Login = () => {
         dispatch(handleLogin(data));
         ability.update(res.data.userData.ability);
         history.push("/dashboard/analytics");
+        window.location.reload()
         toast.success(
           <ToastContent
             name={name}
