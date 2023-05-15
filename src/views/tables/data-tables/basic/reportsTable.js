@@ -1,9 +1,12 @@
 // ** React Imports
-import { useState,useEffect } from 'react'
+import { useState,useEffect, useRef } from 'react'
+import html2pdf from 'html2pdf.js/dist/html2pdf.min';
+import ReactDOMServer from 'react-dom/server';
 
 // ** Table columns & Expandable Data
 import ExpandableTable, { data, columns } from '../data'
 import DateRangePicker from '@wojtekmaj/react-daterange-picker';
+import Html from 'react-pdf-html';
 
 // ** Third Party Components
 import ReactPaginate from 'react-paginate'
@@ -17,7 +20,9 @@ import { useHistory } from 'react-router-dom'
 import Flatpickr from 'react-flatpickr'
 import { CSVLink } from 'react-csv';
 import moment from 'moment/moment';
-
+import { Document,Page } from '@react-pdf/renderer';
+import html2canvas from 'html2canvas';
+import jsPDF from 'jspdf';
 const ReportsTable = () => {
   // ** State
   const [currentPage, setCurrentPage] = useState(0)
@@ -29,6 +34,34 @@ const ReportsTable = () => {
   const [initiateDownload, setInitiateDownload] = useState(false)
   const [data,setData]=useState([])
   const history = useHistory()
+  const containerRef = useRef();
+
+  const PdfDownloadComponent = ( htmlContent ) => {
+   
+      const container = document.createElement('div');
+      container.innerHTML = htmlContent;
+  
+      // Use html2canvas to capture the rendered HTML content
+      html2canvas(container)
+        .then((canvas) => {
+          // Calculate the ratio to fit the content on the PDF page
+          const imgData = canvas.toDataURL('image/png');
+          const pdf = new jsPDF('p', 'mm');
+          const width = pdf.internal.pageSize.getWidth();
+          const height = (canvas.height * width) / canvas.width;
+  
+          // Add the captured image to the PDF
+          pdf.addImage(imgData, 'PNG', 0, 0, width, height);
+  
+          // Download the PDF
+          pdf.save('download.pdf');
+        });
+    
+  
+    // Trigger the download immediately
+  
+  
+  };
   // ** Function to handle filter
   const handlePagination = page => {
     console.log(page)
@@ -45,6 +78,7 @@ const ReportsTable = () => {
   }, [])
   
   const changedate=(value)=>{
+    setLoading(true)
     setInitiateDownload(false)
     console.log(value)
     setDate(value)
@@ -54,22 +88,31 @@ const ReportsTable = () => {
     headers: { Authorization: `Bearer ${localStorage.getItem('tokens')}` },
 }
 
-axios.get(`https://warranty.lsin.panasonic.com/api/report/getDump?startDate=${fromDate}&endDate=${toDate}`,configs).then(res=>
+axios.get(`https://Warranty.lsin.panasonic.com/api/report/getDump?startDate=${fromDate}&endDate=${toDate}`,configs).then(res=>
 {
+  console.log(res)
 var modifiedData= res.data.msg.map(a=>
   
     ( {
-      "businessUnitSpoc":a.approvedStatus.businessUnitSpoc.approveState,
-      "managerApproval": a.approvedStatus.manager.approveState,
-      "serviceTechnician":a.approvedStatus.serviceTechnician.approveState,
-      "warehouseHead":a.approvedStatus.warehouseHead.approveState,
-"fake":a.fake,
-"isReady":a.isReady,
-"partnerApproval":a.partnerApproval,
-"partnerId":a.partnerId,
-"reportColId":a.reportColId,
+      "Report Id":a.itemCode.reportId,
+      "Report Date":new Date(a.itemCode.createdAt).toLocaleDateString(),
+      "Month":new Date(a.itemCode.createdAt).toLocaleString('default', { month: 'long' }),
+      "Year":new Date(a.itemCode.createdAt).getFullYear(),
+      "Item Code":a.itemCode.itemCode,
+      "Partner Name": a.partners.partnerName,
+      "City": a.partners.city,
+      "Description":a.products.description,
+      "Units":a.itemCode.units,
+      "Fake":a.itemCode.summary.fake,
+      "Item in Warranty":a.itemCode.summary.item_in_warenty,
+      "Out of Warranty":a.itemCode.summary.out_of_warenty,
+      "Warranty already claimed":a.itemCode.summary.warrenty_already_claimed,
+      "Product Category":a.products.Category,
+      "Prouduct Subcategory":a.products.subCategory,
+
 
     }))
+    setLoading(false)
     setJobcsv(modifiedData)
 
 setInitiateDownload(true)
@@ -94,7 +137,7 @@ setInitiateDownload(true)
         setData(res.data.msg)
     })
   }
-
+  
   // ** Custom Pagination
   const CustomPagination = () => (
     <ReactPaginate
@@ -150,17 +193,43 @@ setInitiateDownload(true)
     selector: row =>row.ReportData[0]?.summary.warrenty_already_claimed
   },]
 
+
+  const printHandler = () => {
+    var opt = {
+      margin:       0,
+      filename:     'myfile.pdf',
+      image:        { type: 'jpeg', quality: 0.98 },
+      html2canvas:  { scale: 1 },
+      jsPDF:        { unit: 'in', format: 'a4', orientation: 'portrait' }
+    };
+     
+    const printElement =reportpdfjs();
+
+    // const printElement = pdfJSX();
+
+    html2pdf().from(printElement).set(opt).save();
+  }
+
   return (
     <Card>
+      <div className="App">
+      <button onClick={printHandler}>Print</button>
+    </div>
+    <div>
+      
+    </div>
       <CardHeader>
         <CardTitle tag='h4'>All Reports</CardTitle>
         <div>
         <DateRangePicker onChange={(e)=>changedate(e)} value={daterange} />
         <br/>
+        {loading?<p style={{padding:"15px"}}>Loading....</p>:null}
         {initiateDownload && (
         <>
       
-        <div className='csvdownload'>  <CSVLink
+        <div className='csvdownload'>
+         
+            <CSVLink
     data={jobcsv}
     filename={`${"report"}`}     
     >{`Download ${"Report"}`} </CSVLink></div>
@@ -172,6 +241,7 @@ setInitiateDownload(true)
         </div>
         
       </CardHeader>
+     
       <div className='react-dataTable'>
         {data.length?
         <DataTable

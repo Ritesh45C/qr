@@ -69,14 +69,7 @@ const SubcategoryTable = () => {
   }
     axios.get(`${baseUrls}${key}`,configs).then(res=>{
        setData(res.data)
-    //   var colourOptions=res.data.msg.map(a=>{
-    //    return({
-    //     //  value:a.itemCode,
-    //      label:a.itemCode,
-    //      description:a.description
-    //    })
-    //   })
-    //   setitemCode(colourOptions)
+   
   })}
 
   // ** Custom Pagination

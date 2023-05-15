@@ -9,9 +9,11 @@ import 'cleave.js/dist/addons/cleave-phone.us'
 import Axios from 'axios'
 // ** Reactstrap Imports
 import { Row, Col, Form, Card, Input, Label, Button, CardBody, CardTitle, CardHeader, FormFeedback } from 'reactstrap'
+import {  Modal, ModalHeader, ModalBody, ModalFooter } from 'reactstrap'
 
 // ** Utils
 import { selectThemeColors } from '@utils'
+import axios from 'axios'
 
 // ** Demo Components
 // import DeleteAccount from './DeleteAccount'
@@ -69,13 +71,17 @@ const timeZoneOptions = [
 const AccountTabs = ({ data }) => {
   var id = localStorage.getItem('id')
   var ds=localStorage.getItem('tokens')
+  const [password,setPassword]= useState("")
+  const [centeredModal, setCenteredModal] = useState(false)
+  const [message,setMessage]=useState("")
+  const [validate,setValidate]=useState(true)
   const [defaultValues,setDefaultValues]=useState({
       name:"",
       email:"",
       company:"",
       phNumber:"",
       zipCode:"",
-      country:"",
+      password:"",
       userRole:"",
       region:"",
   
@@ -93,7 +99,7 @@ console.log(configs)
             company:res.data.msg.company,
             phNumber:res.data.msg.phone,
             zipCode:res.data.msg.pincode,
-            country:res.data.msg.country,
+            password:"",
             userRole:res.data.msg.userRole,
             designation:res.data.msg.designation,
             region:res.data.msg.region,
@@ -136,19 +142,53 @@ console.log(configs)
     }
     reader.readAsDataURL(files[0])
   }
+  const onValidate=(e)=>{
+    setPassword(e.target.value)
+    const passRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{11,}$/
+    if(!passRegex.test(e.target.value)) {
+      setValidate('has-danger')
+        
+    }else{
+      setValidate("has-success")
+    }
+  }
 
   const onSubmit = data => {
-    if (Object.values(data).every(field => field.length > 0)) {
-      return null
-    } else {
-      for (const key in data) {
-        if (data[key].length === 0) {
-          setError(key, {
-            type: 'manual'
-          })
-        }
-      }
+    console.log(data)
+    // if (Object.values(data).every(field => field.length > 0)) {
+    //   return null
+    // } else {
+    //   for (const key in data) {
+    //     if (data[key].length === 0) {
+    //       setError(key, {
+    //         type: 'manual'
+    //       })
+    //     }
+    //   }
+    // }
+  }
+  const onPasswordSubmit= (e)=>{
+    if(validate==="has-danger"){
+      alert("Password is Invalid")
+      return
     }
+    e.preventDefault()
+    const configs = {
+      headers: { Authorization: `Bearer ${localStorage.getItem('tokens')}` },
+  }
+    const data= {
+      "password": password
+  }
+      Axios.put("https://Warranty.lsin.panasonic.com/api/user/update-passwd",data,configs).then(res=>{
+        setCenteredModal(true)  
+        setMessage(res.data.msg)
+      console.log(res,'resposen')
+      }
+      ).catch(err=>      {
+        setCenteredModal(true)  
+
+         setMessage("*Password must be at least 11 characters long and contain at least one uppercase letter, one lowercase letter, one number and one special character")      
+      } )
   }
 
   const handleImgReset = () => {
@@ -157,6 +197,17 @@ console.log(configs)
 
   return (
     <Fragment>
+       <Modal isOpen={centeredModal} toggle={() => setCenteredModal(!centeredModal)} className='modal-dialog-centered'>
+          <ModalHeader toggle={() => setCenteredModal(!centeredModal)}>Update Status!</ModalHeader>
+          <ModalBody>
+            {message}
+          </ModalBody>
+          <ModalFooter>
+            <Button color='primary' onClick={() => setCenteredModal(!centeredModal)}>
+              Ok
+            </Button>{' '}
+          </ModalFooter>
+        </Modal>
       <Card>
         <CardHeader className='border-bottom'>
           <CardTitle tag='h4'>Profile Details</CardTitle>
@@ -250,10 +301,10 @@ console.log(configs)
               </Col>
               <Col sm='6' className='mb-1'>
                 <Label className='form-label' for='country'>
-                  Country
+               Country
                 </Label>
             
-                                 <Input  defaultValue={defaultValues.country}  id='zipCode' name='country' placeholder='Country' maxLength='6' />
+                                 <Input type='country' value={defaultValues.country}  id='country' name='password' placeholder='country' />
 
             
               </Col>
@@ -269,6 +320,21 @@ console.log(configs)
               </Col>
             </Row>
           </Form>
+          <hr/>
+          <div>
+            <h4 style={{padding:"15px 0"}}>Change Password</h4>
+            <Col sm='3' className='mb-1'>
+                <Label className='form-label' for='password'>
+                New  Password
+                </Label>
+            
+                <Input valid={ validate === 'has-success' } invalid={validate==="has-danger"} width={250} type='password' value={password} onChange={e=>onValidate(e)}  id='password' name='password' placeholder='password' />
+                  <div className='passwordDesciption'>*Password must be at least 11 characters long and contain at least one uppercase letter, one lowercase letter, one number and one special character</div>
+                <Button onClick={(e)=>onPasswordSubmit(e)} style={{margin:"20px 0"}}  className='me-1' color='danger'>
+                  Change Password
+                </Button>
+              </Col>
+          </div>
         </CardBody>
       </Card>
       {/* <DeleteAccount /> */}

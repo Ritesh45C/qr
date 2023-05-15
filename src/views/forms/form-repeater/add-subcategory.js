@@ -5,6 +5,7 @@ import { selectThemeColors } from '@utils'
 // ** Icons Imports
 import { X, Plus } from "react-feather";
 import axios from 'axios'
+import { Button, Modal, ModalHeader, ModalBody, ModalFooter } from 'reactstrap'
 
 // ** Custom Components
 import Repeater from "@components/repeater";
@@ -20,7 +21,6 @@ import {
   Label,
   FormGroup,
   Input,
-  Button,
 } from "reactstrap";
 import DataTableWithButtons from "../../tables/data-tables/basic/TableExpandable";
 import SubcategoryTable from "../../tables/data-tables/basic/subcategorytable";
@@ -32,6 +32,8 @@ const AddDesignation = () => {
   const[Category, setCategory] = useState([]);
   const [subCategory,setSubcategory]=useState([])
   const [options, setOptions] = useState([]);
+  const [centeredModal, setCenteredModal] = useState(false)
+
   useEffect(() => {
     getCategories();
   }, []);
@@ -65,7 +67,8 @@ const onsubmit =( e)=>{
       headers: { Authorization: `Bearer ${localStorage.getItem('tokens')}` },
   }
     axios.post("https://Warranty.lsin.panasonic.com/api/category/subCategory",data,configs).then(res=>{
-      alert("Successfully Created")
+      setCenteredModal(true) 
+
       console.log(res.data)
     })
 }
@@ -81,6 +84,17 @@ const onsubmit =( e)=>{
   return (
     <>
       <Card>
+      <Modal isOpen={centeredModal} toggle={() => setCenteredModal(!centeredModal)} className='modal-dialog-centered'>
+          <ModalHeader toggle={() => setCenteredModal(!centeredModal)}>Success</ModalHeader>
+          <ModalBody>
+             Successfully Created
+          </ModalBody>
+          <ModalFooter>
+            <Button color='primary' onClick={() => setCenteredModal(!centeredModal)}>
+              Ok
+            </Button>{' '}
+          </ModalFooter>
+        </Modal>
         <CardHeader>
           <h4 className="card-title">Add SubCategory</h4>
         </CardHeader>

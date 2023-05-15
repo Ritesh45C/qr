@@ -11,6 +11,12 @@ export default [
     children:  role==="admin"||role==="superadmin"? [
       {
         id: 'productRepeater',
+        title: 'Add Products',
+        icon: <RotateCw size={20} />,
+        navLink: '/forms/add-products'
+      },
+      {
+        id: 'productRepeater',
         title: 'View Products',
         icon: <RotateCw size={20} />,
         navLink: '/forms/view-products'

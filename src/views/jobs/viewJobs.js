@@ -101,9 +101,9 @@ setData(data)
 
   const pages=page+1
   axios.get(`https://Warranty.lsin.panasonic.com/api/job`,configs).then(res=>setPageCount(res.data.msg.length/10+1))
-    axios.get(`https://Warranty.lsin.panasonic.com/api/job/?page=${pages}&limit=10`,configs).then(res=>{
+    axios.get(`https://Warranty.lsin.panasonic.com/api/job/?page=${pages}&limit=50`,configs).then(res=>{
         console.log(res.data)
-        setData(res.data.msg)
+        setData(res.data.msg.jobData)
     })
   }
  const dataFromListOfUsersState = () => {
@@ -116,10 +116,10 @@ setData(data)
       nextLabel={''}
       forcePage={currentPage}
       onPageChange={page => handlePagination(page)}
-      pageCount={pageCount}
+      pageCount={2}
+      select
       breakLabel={'...'}
       pageRangeDisplayed={2}
-      
       marginPagesDisplayed={2}
       activeClassName='active'
       pageClassName='page-item'
@@ -179,7 +179,10 @@ setData(data)
     columns,
     data
   };
-
+  const paginationComponentOptions = {
+    selectAllRowsItem: true,
+    selectAllRowsItemText: 'ALL',
+  };
   return (
     <Card>
       <CardHeader>
@@ -211,12 +214,15 @@ setData(data)
         //   expandableRows
           columns={columns}
           expandOnRowClicked
+          rowsp
           className='react-dataTable'
           sortIcon={<ChevronDown size={10} />}
           paginationComponent={data.length===0?null:CustomPagination}
+         paginationPerPage={50}
+
           paginationDefaultPage={currentPage + 1}
         //   expandableRowsComponent={ExpandableTable}
-          paginationRowsPerPageOptions={[10, 25, 50, 100]}
+          paginationRowsPerPageOptions={[50]}
         />     
            </DataTableExtensions>
 

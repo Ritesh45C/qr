@@ -13,7 +13,9 @@ body {
     justify-content: space-between;
     margin-bottom: 12px;
 }
-
+.c12,.c6,.c5{
+  padding:12px
+}
 .description{
   display: flex;
 }
@@ -71,7 +73,11 @@ body {
     font-size: 100%;
   }
 }
-
+.passwordDesciption{
+  margin-top: 31px;
+  font-size: 12px;
+  width: 500px;
+}
 .widget {
   /* width: 1170px; */
   padding-left: 15px;
@@ -1325,11 +1331,43 @@ input[type="radio"]+label {
     max-width: none;
   }
 }
-
+.c0{
+  border: 1px solid;
+  
+}
+.c7{
+  border: 1px solid;
+  
+}
+.c2{
+  border: 1px solid;
+  background-color: white !important;
+  padding: 12px !important;
+}
+.c6{
+  border-right: none;
+  border-top: none;
+  border-bottom: none;
+}
 .statistics-body .row{
  row-gap: 30px;
 }
 
 .ritesh{
   transform: translate(0px, -50px) !important;
+}
+
+.assigntable {
+  border-collapse: collapse;
+  width: 100%;
+}
+
+.assigntd {
+  border: 1px solid #dddddd;
+  text-align: left;
+  padding: 8px;
+}
+
+tr:nth-child(even) {
+  background-color: #dddddd;
 }

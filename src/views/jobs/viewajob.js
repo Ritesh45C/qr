@@ -79,7 +79,6 @@ const viewajob = (props) => {
 ))
         
     
-      
     
     
 

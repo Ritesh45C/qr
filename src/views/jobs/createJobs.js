@@ -331,6 +331,27 @@ var options= [{
       })
     })
     console.log(jobdata)
+
+    let error=false
+  
+      jobdata.forEach((obj) => {
+        if(!error){
+  Object.entries(obj).forEach(([key, value]) => {
+        if (!value) {
+          error=true
+          alert(`${key} is required ! `);
+          return
+        }
+      });
+        }
+    
+    });
+    
+    
+    if(error){
+      console.log("error")
+      return
+    }
     var data={
       items:jobdata
     }
